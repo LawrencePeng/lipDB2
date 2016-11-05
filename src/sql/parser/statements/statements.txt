@@ -1,0 +1,43 @@
+Expression:= Select | Insert | Update | Delete
+
+Expr:= ( Value | IDF | Expr ) Operator ( Number | IDF | Expr )
+
+Select:= SELECT (UNIQUE) ( * | ALL | Fields ) From Where OrderBy GroupBy Limit
+
+Update:= UPDATE Fields Where VALUES WITH VALUES Values
+
+Insert:= INSERT Filelds From WITH VALUES Values
+
+DELETE:= DELETE ( * | ALL | Fields )  From
+
+Limit:= LIMIT Number
+
+From:= FROM Table
+
+Where:= WHERE Expr
+
+OrderBy:= ORDERBY Field Order
+
+Order:= ASC | DESC
+
+GroupBY:= GROUPBY IDF
+
+Fields:= IDF (, IDF)*
+
+Tables:= Table+
+
+Values:= Value (, Value)*
+
+Value:= Number | String
+
+Number:= (-?)(\\d+)(\\.?)(\\d*)
+
+Operator:= + | - | * | / | % | = | == | != | && | \|\| | ! | << | >> | < | > | <= | >=
+
+String:= (Quote | DQuote) Char* (Quote | DQuote)
+
+Char:= [[a-z]|[A-Z]|[1-9]]*
+
+Table := IDF
+
+IDF:= ((a-z)|(A-Z))+((a-z)(A-Z)(0-9)*)
