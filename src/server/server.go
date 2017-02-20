@@ -31,9 +31,7 @@ func main() {
 		result, err := Eval(sql)
 
 		if err != nil {
-
-		} else {
-
+			result = err.Error()
 		}
 
 		conn.Write([]byte(result))
