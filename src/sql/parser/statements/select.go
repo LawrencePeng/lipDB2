@@ -4,17 +4,17 @@ package statements
 
 type (
 	SelectStatement struct {
-		Unique  Unique
+		Unique Unique
 
-		All     All
+		All All
 
-		Star    Star
+		Star Star
 
-		Fields  Fields
+		Fields Fields
 
-		From    From
+		From From
 
-		Where   Where
+		Where Where
 
 		OrderBy OrderByStatement
 
@@ -22,7 +22,7 @@ type (
 
 		// TODO groupBy GroupByStatement
 
-		AppliableStatement
+		Appliable
 	}
 )
 

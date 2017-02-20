@@ -18,9 +18,9 @@ type (
 	}
 
 	LexerImp struct {
-		text                       string
-		pos, mark, textLen, bufPos int
-		token                      Token
+		Text                       string
+		Pos, Mark, TextLen, BufPos int
+		Tken                       Token
 	}
 
 	LexerInitError struct{}
@@ -160,23 +160,23 @@ var (
 )
 
 func IsField(tok Token) bool {
-	return tokens[tok.TypeInfo] != "" && IsLetter(tok.Value)
+	return tokens[tok.TypeInfo] != "" && IsLetter(tok.Value.(byte))
 }
 
 func (imp *LexerImp) Init() error {
-	text := strings.TrimSpace(imp.text)
-	imp.text = text
-	imp.textLen = len(text)
+	text := strings.TrimSpace(imp.Text)
+	imp.Text = text
+	imp.TextLen = len(text)
 
-	imp.pos = 0
-	imp.mark = 0
-	imp.bufPos = 0
+	imp.Pos = 0
+	imp.Mark = 0
+	imp.BufPos = 0
 
-	if imp.textLen <= 0 {
+	if imp.TextLen <= 0 {
 		return LexerInitError{}
 	}
 
-	imp.token = Token{"BEGIN", ""}
+	imp.Tken = Token{"BEGIN", ""}
 	return nil
 }
 
@@ -194,15 +194,15 @@ func IsNumber(ch byte) bool {
 
 func IsLetter(ch byte) bool { return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') }
 
-func (imp *LexerImp) IsEOF() bool { return imp.pos == imp.textLen }
+func (imp *LexerImp) IsEOF() bool { return imp.Pos == imp.TextLen }
 
 func (imp *LexerImp) ScanNumber() error {
-	imp.mark = imp.pos
+	imp.Mark = imp.Pos
 
-	text := imp.text
-	textLen := imp.textLen
-	pos := imp.pos
-	bufPos := imp.bufPos
+	text := imp.Text
+	textLen := imp.TextLen
+	pos := imp.Pos
+	bufPos := imp.BufPos
 
 	//if the first character is '-', accept it.
 	if text[pos] == '-' {
@@ -224,14 +224,14 @@ func (imp *LexerImp) ScanNumber() error {
 	}
 
 	if pos == textLen {
-		imp.pos = pos
-		parsedInt, err := strconv.ParseInt(text[(imp.mark):(imp.mark+bufPos)], 10, 64)
+		imp.Pos = pos
+		parsedInt, err := strconv.ParseInt(text[(imp.Mark):(imp.Mark+bufPos)], 10, 64)
 
 		if err != nil {
 			return LexerParseError{}
 		}
 
-		imp.token = Token{"INT", parsedInt}
+		imp.Tken = Token{"INT", parsedInt}
 
 		return nil
 	}
@@ -247,7 +247,7 @@ func (imp *LexerImp) ScanNumber() error {
 	isDouble = true
 
 	for {
-		if imp.pos == textLen {
+		if imp.Pos == textLen {
 			break
 		}
 
@@ -259,7 +259,7 @@ func (imp *LexerImp) ScanNumber() error {
 		pos++
 	}
 
-	value := text[imp.mark : imp.mark+bufPos]
+	value := text[imp.Mark : imp.Mark+bufPos]
 
 	if isDouble {
 		parsedFloat, err := strconv.ParseFloat(value, 64)
@@ -268,7 +268,7 @@ func (imp *LexerImp) ScanNumber() error {
 			return LexerParseError{}
 		}
 
-		imp.token = Token{"DOUBLE", parsedFloat}
+		imp.Tken = Token{"DOUBLE", parsedFloat}
 	} else {
 		parsedInt, err := strconv.ParseInt(value, 10, 64)
 
@@ -276,25 +276,25 @@ func (imp *LexerImp) ScanNumber() error {
 			return LexerParseError{}
 		}
 
-		imp.token = Token{"INT", parsedInt}
+		imp.Tken = Token{"INT", parsedInt}
 	}
 
-	imp.pos = pos
+	imp.Pos = pos
 
 	return nil
 }
 
 func (imp *LexerImp) ScanIdentifier() error {
-	imp.mark = imp.pos
+	imp.Mark = imp.Pos
 
-	text := imp.text
-	pos := imp.pos
+	text := imp.Text
+	pos := imp.Pos
 	bufPos := 1
 
 	for {
 		pos += 1
 
-		if pos == imp.textLen {
+		if pos == imp.TextLen {
 			break
 		}
 
@@ -305,94 +305,100 @@ func (imp *LexerImp) ScanIdentifier() error {
 		bufPos += 1
 	}
 
-	idtfier := text[(imp.mark):(imp.mark + bufPos)]
+	idtfier := text[(imp.Mark):(imp.Mark + bufPos)]
 	tokString := tokens[idtfier]
 
 	if tokString != "" {
-		imp.token = Token{tokString, tokString}
+		imp.Tken = Token{tokString, tokString}
 	} else {
-		imp.token = Token{"IDENTIFIER", idtfier}
+		imp.Tken = Token{"IDENTIFIER", idtfier}
 	}
 
-	imp.pos = pos
+	imp.Pos = pos
 
 	return nil
 }
 
 func (imp *LexerImp) Token() Token {
-	return imp.token
+	return imp.Tken
 }
 
 func (imp *LexerImp) NextToken() error {
-	text := imp.text
-	textLen := imp.textLen
-	imp.bufPos = 0
+	text := imp.Text
+	textLen := imp.TextLen
+	imp.BufPos = 0
 
-	if imp.pos > textLen {
+	if imp.Pos > textLen {
 		return LexerParseError{}
 	}
 
-	if imp.pos == textLen {
-		imp.token = Token{"EOF", nil}
+	if imp.Pos == textLen {
+		imp.Tken = Token{"EOF", nil}
 		return nil
 	}
 
-	for ; IsWhiteSpace(text[imp.pos]); imp.pos += 1 {
+	for ; IsWhiteSpace(text[imp.Pos]); imp.Pos += 1 {
 	}
 
-	switch text[imp.pos] {
+	switch text[imp.Pos] {
 	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-':
 		imp.ScanNumber()
 	case ',':
-		imp.pos += 1
-		imp.token = Token{"COMMA", ","}
+		imp.Pos += 1
+		imp.Tken = Token{"COMMA", ","}
 	case '\'':
-		imp.pos += 1
-		imp.token = Token{"QUOTE", "'"}
+		imp.Pos += 1
+		imp.Tken = Token{"QUOTE", "'"}
 	case '"':
-		imp.pos += 1
-		imp.token = Token{"DQUOTE", "\""}
+		imp.Pos += 1
+
+		for imp.BufPos = imp.Pos; imp.Text[imp.BufPos] != '"' && !imp.IsEOF(); {
+			imp.BufPos++
+		}
+		imp.Tken = Token{"", imp.Text[imp.Pos:imp.BufPos]}
+		imp.Pos = imp.BufPos + 1
 	case '(':
-		imp.pos += 1
-		imp.token = Token{"LPAREN", "("}
+		imp.Pos += 1
+		imp.Tken = Token{"LPAREN", "("}
 	case ')':
-		imp.pos += 1
-		imp.token = Token{"RPAREN", ")"}
+		imp.Pos += 1
+		imp.Tken = Token{"RPAREN", ")"}
 	case '[':
-		imp.pos += 1
-		imp.token = Token{"LBRACKET", "["}
+		imp.Pos += 1
+		imp.Tken = Token{"LBRACKET", "["}
 	case ']':
-		imp.pos += 1
-		imp.token = Token{"RBRACKET", "]"}
+		imp.Pos += 1
+		imp.Tken = Token{"RBRACKET", "]"}
 	case '{':
-		imp.pos += 1
-		imp.token = Token{"LBRACE", "{"}
+		imp.Pos += 1
+		imp.Tken = Token{"LBRACE", "{"}
 	case '}':
-		imp.pos += 1
-		imp.token = Token{"RBRACE", "}"}
+		imp.Pos += 1
+		imp.Tken = Token{"RBRACE", "}"}
 	case '*':
-		imp.pos += 1
-		imp.token = Token{"STAR", "*"}
+		imp.Pos += 1
+		imp.Tken = Token{"STAR", "*"}
 	case '?':
-		imp.pos += 1
-		imp.token = Token{"QUOS", "?"}
+		imp.Pos += 1
+		imp.Tken = Token{"QUOS", "?"}
 	case ';':
-		imp.pos += 1
-		imp.token = Token{"SEMI", ":"}
+		imp.Pos += 1
+		imp.Tken = Token{"SEMI", ";"}
 	case '=':
-		imp.pos += 1
-		if text[imp.pos] == '=' {
-			imp.pos += 1
-			imp.token = Token{"EQEQ", "=="}
+		imp.Pos += 1
+		if text[imp.Pos] == '=' {
+			imp.Pos += 1
+			imp.Tken = Token{"EQEQ", "=="}
 		} else {
-			imp.token = Token{"EQ", "="}
+			imp.Tken = Token{"EQ", "="}
 		}
 	default:
-		if IsLetter(text[imp.pos]) {
+		if IsLetter(text[imp.Pos]) {
 			imp.ScanIdentifier()
 		} else {
 			return LexerInitError{}
 		}
 	}
+
 	return nil
 }

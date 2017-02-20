@@ -1,18 +1,15 @@
 package statements
 
 import (
-	. "../../lexer"
+	_ "../../lexer"
 )
 
 // ( Value | IDF | Expr) Operator (Value | IDF | Expr)
 
 type (
 	Expr struct {
-		LeftOperand  interface{}
-
-		RightOperand interface{}
-
-		Operator     Operator
+		Conditions []Condition
+		InterOP    []LogicOperation
 	}
 )
 
@@ -21,15 +18,11 @@ func (expr Expr) IsExpression() bool {
 }
 
 func IsExpr(expr Expr) bool {
-	lo := expr.LeftOperand
-	ro := expr.RightOperand
+	for _, value := range expr.Conditions {
+		if !IsCondition(value) {
+			return false
+		}
+	}
 
-	leftValid := IsNumberStatement(lo.(Number)) ||
-		IsIDF(lo.(Token)) ||
-		IsExpr(lo.(Expr))
-	rightValid := IsNumberStatement(ro.(Number)) ||
-		IsIDF(ro.(Token)) ||
-		IsExpr(ro.(Expr))
-
-	return leftValid && rightValid && IsOperatorStatement(expr.Operator)
+	return len(expr.InterOP)+1 == len(expr.Conditions)
 }

@@ -2,143 +2,457 @@ package dm
 
 import (
 	"errors"
+	"os"
+	"../sql/parser/statements"
+	"../sql/lexer"
+	"encoding/binary"
+	"math"
 )
 
 // 早期为了简化设计，使用定长记录。
 // 文件头目前只存储块数。
 // 块头目前只存放Freelist。
 
-type DataManager interface {
-	Insert(data []byte) error
-	Update(data []byte, uniPos uint) error
-	Delete(uniPos uint) error
-	Retrieve(uniPos uint) ([]byte, error)
-}
-
-type dataManager struct {
-	tableName string
-	kacher *cacher
-}
-
-func Create(tableName string, cols []string, lens []uint16, nullables []bool) *DataManager {
-	//offsets, sizeOfRecord := calcuOffsetsAndSizeOfRecord(lens)
-	metaDataFile := createFile(tableName + SUFFIX_META)
-	//writeThrough(metaDataFile,
-	//	prepareMetaData(cols, lens, offsets, nullables, sizeOfRecord))
-
-	dataFile := createFile(tableName + SUFFIX_DB)
-	//appendFirstBlock(dataFile, sizeOfRecord)
-
-	kacher := NewCacher(dataFile, metaDataFile, 50, cols, lens, nullables)
-
-	return &dataManager {
-		tableName: tableName,
-		kacher: kacher,
-	}
-}
-
-
-func Open(tableName string) {
-	metaDataFile := openFile(tableName + SUFFIX_META)
-	dataFile := openFile(tableName + SUFFIX_DB)
-
-	kacher := NewCacher(dataFile, metaDataFile, 50, nil, nil, nil)
-	return &dataManager {
-		tableName: tableName,
-		kacher: kacher,
-	}
-}
-
-func (dm *dataManager) Insert(data []byte) error {
-	if len(data) != dm.kacher.sizeOfRecord {
-		return errors.New("data to insert has a wrong format.")
+type (
+	DataManager interface {
+		Insert(data []byte) error
+		Update(data []byte, uniPos uint) error
+		Delete(uniPos uint) error
+		Retrieve(uniPos uint) ([]byte, error)
+		Boom() error
 	}
 
-	page := dm.kacher.GetPage(-1)
+	DM struct {
+		TableName string
+		Kacher    *cacher
+	}
+)
+
+func Create(tableName string, cols []string, types []string, lens []uint16, nullables []bool, indexes []bool) (*DM, error) {
+	metaDataFile, err := createFile(tableName + SUFFIX_META)
+	if err != nil {
+		return nil, errors.New("Failed to create mdFile.")
+	}
+
+	dataFile, err := createFile(tableName + SUFFIX_DB)
+	if err != nil {
+		return nil, errors.New("Failed to create dataFile.")
+	}
+
+	kacher, err := NewCacher(dataFile,
+				metaDataFile,
+			50,
+				cols,
+				types,
+				lens,
+				nullables,
+				indexes)
+	if err != nil {
+		return nil, errors.New("Failed to create db.")
+	}
+
+	return &DM{
+		tableName,
+		kacher,
+	}, nil
+}
+
+func Open(tableName string) (*DM, error) {
+	metaDataFile, err := openFile(tableName + SUFFIX_META)
+	if err != nil {
+		return nil, errors.New("Unable to Open mdFile.")
+	}
+	dataFile, err := openFile(tableName + SUFFIX_DB)
+	if err != nil {
+		return nil, errors.New("Unable to Open dataFile")
+	}
+
+	kacher, err := NewCacher(dataFile, metaDataFile, 50, nil, nil, nil,nil, nil)
+	if err != nil {
+		return nil, errors.New("Unable to New Cacher")
+	}
+
+	return &DM{
+		TableName: tableName,
+		Kacher:    kacher,
+	}, nil
+}
+
+func (dm DM) Boom() error {
+	if err := os.Remove(dm.TableName + SUFFIX_DB); err != nil {
+		return err
+	}
+
+	return os.Remove(dm.TableName + SUFFIX_DB)
+}
+
+func (dm DM) Insert(data []byte) (uint16, error) {
+	if uint16(len(data)) != dm.Kacher.sizeOfRecord {
+		return 0, errors.New("data to insert has a wrong format.")
+	}
+
+	page := dm.Kacher.GetPage(-1)
 	defer page.Flush()
+
 
 	freelist := page.FreeList()
 	pos := freelist.Front()
 
-	page.numOfFreeList --
+	if pos > page.maxPos {
+		page.maxPos = pos
+	}
+
+	page.numOfFreeList--
 	page.freeList.Remove(freelist.Front())
 
-	updateWith(data, page, pos)
-	return nil
+	page.UpdateWith(data, pos.Value.(uint16))
+	maxRecordOfPage := (PAGE_SIZE - 2) / (dm.Kacher.sizeOfRecord + 2)
+	return page.index * maxRecordOfPage + pos.Value.(uint16), nil
 }
 
-
-
-func updateWith(bts []byte, page *page, pos uint) {
-	sizeOfRecord := page.kacher.sizeOfRecord
-	begin := page.sizeOfBlockHead() + pos * sizeOfRecord
-	page.data[begin: begin + sizeOfRecord] = bts
-}
-
-func (dm *dataManager) Update(data []byte, uniPos uint) error {
-	if len(data) != dm.kacher.sizeOfRecord {
+func (dm DM) Update(data []byte, uniPos uint16) error {
+	if uint16(len(data)) != dm.Kacher.sizeOfRecord {
 		return errors.New("data to update has a wrong format.")
 	}
 
-	pgNo := uniPos / maxNumOfRecord(dm.kacher.sizeOfRecord)
-	page := dm.kacher.GetPage(pgNo)
+	pgNo := uniPos / MaxNumOfRecord(dm.Kacher.sizeOfRecord)
+	relativePos := uniPos % MaxNumOfRecord(dm.Kacher.sizeOfRecord)
+	page := dm.Kacher.GetPage(PageIndex(pgNo))
 
 	for e := page.freeList.Front(); e != nil; e = e.Next() {
-		if e.Value.(*uint) == uniPos {
+		if e.Value == relativePos {
 			return errors.New("The Pos to update is deleted.")
 		}
 	}
 
 	defer page.Flush()
-
-	updateWith(data, page, uniPos)
-
+	page.UpdateWith(data, relativePos)
 	return nil
 }
 
-func (dm *dataManager) Delete(uniPos uint) error {
-	pgNo := uniPos / maxNumOfRecord(dm.kacher.sizeOfRecord)
-	if pgNo >= dm.kacher.numOfBlocks {
+func (dm DM) UpdateBy(where *statements.Where, col string, value interface{}) string {
+	md := dm.Kacher.Metadata
+
+	index := -1
+	for i, c := range md.Cols {
+		if c == col {
+			index = i
+		}
+	}
+
+	if index == -1 {
+		return "No such col"
+	}
+
+	numOfBlocks := dm.Kacher.numOfBlocks
+
+	for i := 0; i < numOfBlocks; i++ {
+		page := dm.Kacher.GetPage(PageIndex(i))
+
+		for pos := 0; pos < page.maxPos; i++ {
+			begin := page.SizeOfBlockHead() + pos*page.kacher.sizeOfRecord
+			data := page.data[begin : begin+page.kacher.sizeOfRecord]
+
+			if data[0] & 0x80 != 0 {
+				tok := value.(lexer.Token)
+				switch tok.TypeInfo {
+				case "INT":
+					bts := make([]byte, 2)
+					binary.BigEndian.PutUint16(bts, tok.Value.(uint16))
+					data[md.Offsets[i]:md.Offsets[i] + 2] = bts
+				case "DOUBLE":
+					bts := make([]byte, 4)
+					binary.BigEndian.PutUint64(bts,math.Float64bits(tok.Value.(float64)))
+					data[md.Offsets[i]:md.Offsets[i] + 4] = bts
+				case "STRING":
+					data[md.Offsets[i]:] = []byte(string(tok.Value))
+				}
+			}
+		}
+	}
+
+	return "OK!"
+
+}
+
+
+func (dm DM) Delete(uniPos uint16) error {
+	pgNo := uniPos / MaxNumOfRecord(dm.Kacher.sizeOfRecord)
+
+	if PageNum(pgNo) >= dm.Kacher.numOfBlocks {
 		return errors.New("The pos is not existed")
 	}
-	page := dm.kacher.GetPage(pgNo)
 
-	relativePos := uniPos % maxNumOfRecord(page.kacher.sizeOfRecord)
+	page := dm.Kacher.GetPage(PageIndex(pgNo))
+
+	relativePos := uniPos % MaxNumOfRecord(page.kacher.sizeOfRecord)
 
 	// check if pos is in freelist
 	for e := page.freeList.Front(); e != nil; e = e.Next() {
-		if e.Value.(*uint) == relativePos {
+		if e.Value == relativePos {
 			return errors.New("The Pos to deleted has been deleted.")
 		}
 	}
 
 	defer page.Flush()
 
-	markDeleteOn(page, relativePos)
+	page.MarkDeleteOn(relativePos)
 
 	page.freeList.PushBack(relativePos)
 	return nil
 }
 
-func (dm *dataManager) Retrieve(uniPos uint) ([]byte, error) {
-	pgNo := uniPos / maxNumOfRecord(dm.kacher.sizeOfRecord)
-	if pgNo >= dm.kacher.numOfBlocks {
-		return []byte{}, errors.New("The pos is not existed")
-	}
-	page := dm.kacher.GetPage(pgNo)
+func (dm DM) DeleteBy(where *statements.Where) error {
+	numOfBlocks := dm.Kacher.numOfBlocks
 
-	relativePos :=
-		uniPos % maxNumOfRecord(page.kacher.sizeOfRecord)
+	for i := 0; i < numOfBlocks; i++ {
+		page := dm.Kacher.GetPage(PageIndex(i))
+
+		for pos := 0; pos < page.maxPos; i++ {
+			begin := page.SizeOfBlockHead() + pos*page.kacher.sizeOfRecord
+			data := page.data[begin: begin+page.kacher.sizeOfRecord]
+
+			if data[0]&0x80 != 0 {
+				if dm.valid(data, where) {
+					pos := page.index *
+						MaxNumOfRecord(dm.Kacher.Metadata.SizeOfRecord)
+
+					if err := dm.Delete(pos); err != nil {
+						return errors.New("")
+					}
+				}
+
+			}
+		}
+	}
+	return nil
+}
+
+func DeleteAll(dm DM) error {
+	os.Remove(dm.TableName + SUFFIX_DB)
+	os.Remove(dm.TableName + SUFFIX_META)
+	md := dm.Kacher.Metadata
+	dm, err := Create(dm.TableName, md.Cols, md.Types, md.Lens, md.Nullables, md.Indexes)
+	if err != nil {
+		return "Unable to Create Table."
+	}
+	return nil
+}
+
+func (dm DM) RetrieveAll() ([][]byte) {
+	arrs := make([][]byte, 0)
+
+	numOfBlocks := dm.Kacher.numOfBlocks
+	for i := 0; i < numOfBlocks; i++ {
+		page := dm.Kacher.GetPage(PageIndex(i))
+
+		for pos := 0; pos < page.maxPos; pos++ {
+			begin := page.SizeOfBlockHead() + pos*page.kacher.sizeOfRecord
+			data := page.data[begin : begin+page.kacher.sizeOfRecord]
+
+			if data[0] & 0x80 != 0 {
+				arrs = append(arrs, data)
+			}
+		}
+	}
+
+	return arrs, nil
+}
+
+func (dm DM) RetrieveBy(where *statements.Where) [][]byte {
+	arrs := make([][]byte, 0)
+
+	numOfBlocks := dm.Kacher.numOfBlocks
+
+	for i := 0; i < numOfBlocks; i++ {
+		page := dm.Kacher.GetPage(PageIndex(i))
+
+		for pos := 0; pos < page.maxPos; i++ {
+			begin := page.SizeOfBlockHead() + pos*page.kacher.sizeOfRecord
+			data := page.data[begin : begin+page.kacher.sizeOfRecord]
+
+			if data[0] & 0x80 != 0 {
+				if dm.valid(data, where) {
+					arrs = append(arrs, data)
+				}
+			}
+		}
+	}
+
+	return arrs
+}
+
+func (dm DM) valid(data []byte, where *statements.Where) bool {
+	conds := where.Expr.Conditions
+	md := dm.Kacher.Metadata
+
+	for _, cond := range conds {
+		var col string
+		var val uint16
+
+		lVal := cond.LVal.Value.(lexer.Token)
+		rVal := cond.RVal.Value.(lexer.Token)
+
+		if lVal.TypeInfo != "IDENTIFIER" || rVal.TypeInfo != "IDENTIFIER" {
+			return false
+		}
+
+		if !IsValue(lVal) && ! IsValue(rVal) {
+			return false
+		}
+
+		if lVal.TypeInfo == "IDENTIFIER" {
+			col = lVal.Value
+			val = rVal.Value
+		} else {
+			col = rVal.Value
+			val = lVal.Value
+		}
+
+		var index int
+		for i, c := range md.Cols {
+			if c == col {
+				index = i
+				break
+			}
+		}
+
+		tp := md.Types[index]
+
+		if tp == "INT" {
+			parsedVal := binary.BigEndian.Uint16(data[md.Offsets[index]:
+				md.Offsets[index] + 2])
+			switch cond.Op.Op {
+			case "==":
+				if parsedVal != val {
+					return false
+				}
+
+			case ">=":
+				if lVal.TypeInfo == "INT" && lVal.Value < parsedVal {
+					return false
+				} else if parsedVal < rVal.Value {
+					return false
+				}
+			case "<=":
+				if lVal.TypeInfo == "INT" && lVal.Value > parsedVal {
+					return false
+				} else if parsedVal > rVal.Value {
+					return false
+				}
+
+			case ">":
+				if lVal.TypeInfo == "INT" && lVal.Value <= parsedVal {
+					return false
+				} else if parsedVal < rVal.Value {
+					return false
+				}
+			case "<":
+				if lVal.TypeInfo == "INT" && lVal.Value >= parsedVal {
+					return false
+				} else if parsedVal >= rVal.Value {
+					return false
+				}
+			}
+
+		} else if tp == "DOUBLE" {
+			parsedVal := float64(binary.BigEndian.Uint64(data[md.Offsets[index]:
+				md.Offsets[index] + 4]))
+
+			switch cond.Op.Op {
+			case "==":
+				if parsedVal != val {
+					return false
+				}
+
+			case ">=":
+				if lVal.TypeInfo == "INT" && lVal.Value < parsedVal {
+					return false
+				} else if parsedVal < rVal.Value {
+					return false
+				}
+			case "<=":
+				if lVal.TypeInfo == "INT" && lVal.Value > parsedVal {
+					return false
+				} else if parsedVal > rVal.Value {
+					return false
+				}
+
+			case ">":
+				if lVal.TypeInfo == "INT" && lVal.Value <= parsedVal {
+					return false
+				} else if parsedVal < rVal.Value {
+					return false
+				}
+			case "<":
+				if lVal.TypeInfo == "INT" && lVal.Value >= parsedVal {
+					return false
+				} else if parsedVal >= rVal.Value {
+					return false
+				}
+			}
+
+		} else  {
+			parsedVal := string(data[md.Offsets[index]:
+				md.Offsets[index] + md.Lens[index]])
+
+			if cond.Op.Op != "==" {
+				return false
+			}
+
+			if parsedVal != val {
+				return false
+			}
+		}
+
+	}
+	return true
+}
+
+
+func IsValue(s string) bool {
+	return s == "INT" || s == "DOUBLE" || s == "STRING"
+}
+
+func (dm DM) Retrieve(uniPos uint16) ([]byte, error) {
+	pgNo := uniPos / MaxNumOfRecord(dm.Kacher.sizeOfRecord)
+	if PageNum(pgNo) >= dm.Kacher.numOfBlocks {
+		return nil, errors.New("The pos is not existed")
+	}
+
+	page := dm.Kacher.GetPage(PageIndex(pgNo))
+
+	relativePos := uniPos % MaxNumOfRecord(page.kacher.sizeOfRecord)
 
 	// check if pos is in freelist
 	for e := page.freeList.Front(); e != nil; e = e.Next() {
-		if e.Value.(*uint) == relativePos {
-			return []byte{},
+		if e.Value == relativePos {
+			return nil,
 				errors.New("The Pos to Retrieve has been deleted.")
 		}
 	}
 
-	begin := page.sizeOfBlockHead() +
-		relativePos * page.kacher.sizeOfRecord
-	return page.data[begin : begin + page.kacher.sizeOfRecord], nil
+	begin := page.SizeOfBlockHead() +
+		relativePos*page.kacher.sizeOfRecord
+
+	return page.data[begin : begin+page.kacher.sizeOfRecord], nil
+}
+
+func createFile(path string) (*os.File, error) {
+	file, err := os.OpenFile(path,
+		os.O_RDWR|os.O_CREATE|os.O_TRUNC|os.O_EXCL,
+		0600)
+	if err != nil {
+		return nil, errors.New("Create File Err")
+	}
+	return file, nil
+}
+
+func openFile(path string) (*os.File, error) {
+	file, err := os.OpenFile(path, os.O_RDWR, 0600)
+	if err != nil {
+		return nil, errors.New("Open File Err")
+	}
+
+	return file, nil
 }
