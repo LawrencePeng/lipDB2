@@ -29,15 +29,15 @@ const (
 )
 
 type Cacher interface {
-	NewPage() (PageIndex, error)
-	GetPage(p PageIndex) *Page
+	NewPage() (uint16, error)
+	GetPage(p uint16) *Pge
 }
 
 type cacher struct {
 	dbFile       *os.File   // file to store data
-	numOfBlocks  PageNum    // block is like page in cache.
+	numOfBlocks  uint16    // block is like page in cache.
 	pages        *list.List // pages are stored in cache.
-	cacheLimit   PageNum    // max pages to keep in cache
+	cacheLimit   uint16    // max pages to keep in cache
 	sizeOfRecord uint16     // every record's size
 	Metadata     *MetaData  // metadata which is stored in .meta file
 }
@@ -46,7 +46,7 @@ var ErrMemTooSmall = errors.New("Mem too small.")
 
 func NewCacher(dbFile *os.File,
 	metaFile *os.File,
-	mem PageNum,
+	mem uint16,
 	cols []string,
 	types []string,
 	lens []uint16,
@@ -61,22 +61,22 @@ func NewCacher(dbFile *os.File,
 	_, sizeOfRecord := calcuOffsetsAndSizeOfRecord(lens)
 
 	if size == 0 { // no record in dbFile
-		flushInitMetaData(metaFile, cols, types,lens, nullables, indexes)
+		flushInitMetaData(metaFile, cols, types, lens, nullables, indexes)
 	}
 
 	md, err := getMetaData(metaFile)
 	if err != nil {
-		return nil, "Failed to Get metadata."
+		return nil, errors.New("Failed to Get metadata.")
 	}
 
 	return &cacher{
 		dbFile,
-		PageNum(numOfPages),
+		uint16(numOfPages),
 		list.New(),
 		mem,
 		sizeOfRecord,
 		md,
-	}
+	}, nil
 
 }
 
@@ -90,7 +90,7 @@ func (kacher *cacher) NewPage() (*Pge, error) {
 	}
 
 	neoPage := &Pge{
-		PageIndex(kacher.numOfBlocks),
+		uint16(kacher.numOfBlocks),
 		serializeTheBlockHead(prepareBlockHead(kacher.sizeOfRecord)),
 		maxNumOfRecord,
 		freeList,
@@ -105,7 +105,7 @@ func flushInitMetaData(metaFile *os.File, cols []string,
 	types []string,
 	lens []uint16,
 	nullables []bool,
-	indexes   []bool) {
+	indexes []bool) {
 	offsets, sizeOfRecord := calcuOffsetsAndSizeOfRecord(lens)
 	writeThrough(metaFile,
 		prepareMetaData(cols, lens, types, offsets, nullables, sizeOfRecord, indexes))
@@ -249,8 +249,8 @@ func getMetaData(metaDataFile *os.File) (*MetaData, error) {
 	return &metaData, nil
 }
 
-func (kacher *cacher) GetPage(pageIndex PageIndex) *Pge {
-	if pageIndex >= PageIndex(kacher.numOfBlocks) {
+func (kacher *cacher) GetPage(pageIndex int16) *Pge {
+	if pageIndex >= int16(kacher.numOfBlocks) {
 		return nil
 	}
 
@@ -276,7 +276,7 @@ func (kacher *cacher) selectFromPageList() *Pge {
 		} else {
 			numOfBlockToFill := kacher.numOfBlocksToFill()
 			for i := 0; i < int(numOfBlockToFill); i++ {
-				page := kacher.loadPageAt(PageIndex(i))
+				page := kacher.loadPageAt(uint16(i))
 				kacher.pages.PushBack(page)
 			}
 		}
@@ -285,7 +285,7 @@ func (kacher *cacher) selectFromPageList() *Pge {
 	maxNumOfFreeList, pgIndex := kacher.choosePage()
 
 	if maxNumOfFreeList != 0 {
-		return kacher.GetPage(pgIndex)
+		return kacher.GetPage(int16(pgIndex))
 	}
 
 	page, err := kacher.NewPage()
@@ -293,7 +293,7 @@ func (kacher *cacher) selectFromPageList() *Pge {
 		panic(err)
 	}
 
-	if PageNum(kacher.pages.Len()) == kacher.cacheLimit {
+	if uint16(kacher.pages.Len()) == kacher.cacheLimit {
 		page := kacher.pages.Front().Value.(*Pge)
 		page.Flush()
 		kacher.pages.Remove(kacher.pages.Front())
@@ -307,9 +307,9 @@ func (kacher *cacher) selectFromPageList() *Pge {
 
 }
 
-func (kacher *cacher) choosePage() (uint16, PageIndex) {
+func (kacher *cacher) choosePage() (uint16, uint16) {
 	maxNumOfFreeList := uint16(0)
-	pgIndex := PageIndex(0)
+	pgIndex := uint16(0)
 	for page := kacher.pages.Front(); page != nil; page = page.Next() {
 		pageInCache := page.Value.(*Pge)
 		if pageInCache.numOfFreeList > maxNumOfFreeList {
@@ -329,7 +329,7 @@ func (kacher *cacher) numOfBlocksToFill() uint16 {
 	return uint16(kacher.numOfBlocks)
 }
 
-func (kacher *cacher) loadPageAt(index PageIndex) *Pge {
+func (kacher *cacher) loadPageAt(index uint16) *Pge {
 	data := make([]byte, PAGE_SIZE)
 	kacher.dbFile.ReadAt(data, int64(index)*PAGE_SIZE)
 	buf := bytes.NewReader(data)
@@ -353,13 +353,13 @@ func (kacher *cacher) loadPageAt(index PageIndex) *Pge {
 	}
 }
 
-func (kacher *cacher) getSpecificPage(pageIndex PageIndex) *Pge {
+func (kacher *cacher) getSpecificPage(pageIndex int16) *Pge {
 	if kacher.pages.Len() == 0 { // if there is no Pge in cache
 
 		numOfBlockToFill := kacher.numOfBlocksToFill()
 
 		for i := 0; i < int(numOfBlockToFill); i++ {
-			page := kacher.loadPageAt(PageIndex(i))
+			page := kacher.loadPageAt(uint16(i))
 			kacher.pages.PushBack(page)
 		}
 	}
@@ -369,7 +369,7 @@ func (kacher *cacher) getSpecificPage(pageIndex PageIndex) *Pge {
 
 		pageInCache := e.Value.(*Pge)
 
-		if pageInCache.index == pageIndex {
+		if int16(pageInCache.index) == pageIndex {
 			kacher.pages.MoveToBack(e)
 		}
 
@@ -377,7 +377,7 @@ func (kacher *cacher) getSpecificPage(pageIndex PageIndex) *Pge {
 	}
 
 	// add the Page into lru cache.
-	if PageNum(kacher.pages.Len()) == kacher.cacheLimit {
+	if uint16(kacher.pages.Len()) == kacher.cacheLimit {
 
 		leastUsed := kacher.pages.Front().Value.(*Pge)
 		leastUsed.Flush()
@@ -385,7 +385,7 @@ func (kacher *cacher) getSpecificPage(pageIndex PageIndex) *Pge {
 		kacher.pages.Remove(kacher.pages.Front())
 	}
 
-	page := kacher.loadPageAt(pageIndex)
+	page := kacher.loadPageAt(uint16(pageIndex))
 	kacher.pages.PushBack(page)
 	page.Flush()
 

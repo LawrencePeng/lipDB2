@@ -16,11 +16,11 @@ type (
 	}
 )
 
-func Parse(s string) (*Appliable, error) {
+func Parse(s string) (AppliableStatement, error) {
 	parser := &Parser{
 		&LexerImp{
 			s,
-			0,0,0,0,
+			0, 0, 0, 0,
 			Token{"BEGIN", nil},
 		},
 	}
@@ -33,7 +33,7 @@ func (parser *Parser) Init() error {
 	return parser.Lexer.NextToken()
 }
 
-func (parser *Parser) ParseLine() (*Appliable, error) {
+func (parser *Parser) ParseLine() (AppliableStatement, error) {
 	tok := parser.Lexer.Token()
 
 	if parser.matchSimple(tok, "SELECT") {
@@ -68,23 +68,24 @@ func (parser *Parser) ParseLine() (*Appliable, error) {
 
 }
 
-func (parser *Parser) ParseDrop() (*Appliable, error) {
-	dropStat := &DropStatement{}
+func (parser *Parser) ParseDrop() (DropStatement, error) {
+	dropStat := DropStatement{}
 
 	tableName := parser.Lexer.Token()
-	if !parser.matchType(tableName,"IDENTIFIER") {
-		return nil, ParsedErr
+	if !parser.matchType(tableName, "IDENTIFIER") {
+		return DropStatement{}, ParsedErr
 	}
 
-	dropStat.TableName = tableName
+	dropStat.TableName = tableName.Value.(string)
 
 	if !parser.matchSemi(parser.Lexer.Token()) {
-		return nil, ParsedErr
+		return DropStatement{}, ParsedErr
 	}
+
 	return dropStat, nil
 }
 
-func (parser *Parser) ParseSelect() (*Appliable, error) {
+func (parser *Parser) ParseSelect() (SelectStatement, error) {
 	selectStat := SelectStatement{}
 
 	uniq := parser.Lexer.Token()
@@ -93,53 +94,55 @@ func (parser *Parser) ParseSelect() (*Appliable, error) {
 			Unique: uniq,
 		}
 	} else if parser.match(uniq, "STAR", "*") {
-		selectStat.Star = Star{
+		selectStat.Star = &Star{
 			Star: uniq,
 		}
 	} else if parser.matchSimple(uniq, "ALL") {
-		selectStat.All = All{
+		selectStat.All = &All{
 			All: uniq,
 		}
 	} else {
 		fields, err := parser.ParseFields()
 		if err != nil {
-			return nil, ParsedErr
+			return selectStat, ParsedErr
 		}
 
 		selectStat.Fields = fields
 	}
 
 	from, err := parser.ParseFrom()
-	if err != nil  { return nil, ParsedErr }
+	if err != nil {
+		return selectStat, ParsedErr
+	}
 	selectStat.From = from
 
-
-	if where, err := parser.ParseWhere();
-		err == nil { selectStat.Where = where }
+	if where, err := parser.ParseWhere(); err == nil {
+		selectStat.Where = where
+	}
 
 	if !parser.matchSemi(parser.Lexer.Token()) {
-		return nil, ParsedErr
+		return selectStat, ParsedErr
 	}
 	parser.Lexer.NextToken()
 
 	return selectStat, nil
 }
 
-func (parser *Parser) ParseUpdate() (*Appliable, error) {
-	upStat := &UpdateStatement{}
+func (parser *Parser) ParseUpdate() (UpdateStatement, error) {
+	upStat := UpdateStatement{}
 
 	if !parser.match(parser.Lexer.Token(), "LPAREN", "(") {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
 
 	col := parser.Lexer.Token()
 	if !parser.matchType(col, "IDENTIFIER") {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
-	upStat.Col = col
+	upStat.Col = col.Value.(string)
 
 	if !parser.match(parser.Lexer.Token(), "EQ", "=") {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
 
 	value := parser.Lexer.Token()
@@ -148,56 +151,56 @@ func (parser *Parser) ParseUpdate() (*Appliable, error) {
 		parser.matchType(value, "DOUBLE") {
 		upStat.Value = value
 	} else {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
 
 	if !parser.match(parser.Lexer.Token(), "RPAREN", ")") {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
 
 	if !parser.matchSimple(parser.Lexer.Token(), "FROM") {
-		return nil, ParsedErr
-	}
-
-	tableName := parser.Lexer.NextToken()
-	if !parser.matchType(tableName, "IDENTIFIER") {
-		return nil, ParsedErr
-	}
-	upStat.TableName = tableName
-
-	where, err := parser.ParseWhere()
-	if err != nil {
-		return nil, ParsedErr
-	}
-	upStat.Where = where
-
-	if !parser.matchSemi(parser.Lexer.Token()) {
-		return nil, ParsedErr
-	}
-	return upStat, nil
-}
-
-func (parser *Parser) ParseDelete() (*Appliable, error) {
-	delStat := &DeleteStatement{}
-
-	from := parser.Lexer.Token()
-	if !parser.matchSimple(from, "FROM") {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
 
 	tableName := parser.Lexer.Token()
 	if !parser.matchType(tableName, "IDENTIFIER") {
-		return nil, ParsedErr
+		return upStat, ParsedErr
 	}
-	delStat.TableName = tableName
+	upStat.TableName = tableName.Value.(string)
+
+	where, err := parser.ParseWhere()
+	if err != nil {
+		return upStat, ParsedErr
+	}
+	upStat.Where = &where
+
+	if !parser.matchSemi(parser.Lexer.Token()) {
+		return upStat, ParsedErr
+	}
+	return upStat, nil
+}
+
+func (parser *Parser) ParseDelete() (DeleteStatement, error) {
+	delStat := DeleteStatement{}
+
+	from := parser.Lexer.Token()
+	if !parser.matchSimple(from, "FROM") {
+		return delStat, ParsedErr
+	}
+
+	tableName := parser.Lexer.Token()
+	if !parser.matchType(tableName, "IDENTIFIER") {
+		return delStat, ParsedErr
+	}
+	delStat.TableName = tableName.Value.(string)
 
 	where, err := parser.ParseWhere()
 	if err == nil {
-		delStat.Where = where
+		delStat.Where = &where
 	}
 
 	if !parser.matchSemi(parser.Lexer.Token()) {
-		return nil, ParsedErr
+		return delStat, ParsedErr
 	}
 	return delStat, nil
 }
@@ -275,53 +278,52 @@ func (parser *Parser) ParseWhere() (Where, error) {
 	return whereStat, nil
 }
 
-func (parser *Parser) ParseCreate() (*Appliable, error) {
+func (parser *Parser) ParseCreate() (CreateStatement, error) {
 	createStat := CreateStatement{}
 
 	tableName := parser.Lexer.Token()
 	if tableName.TypeInfo != "IDENTIFIER" {
-		return nil, ParsedErr
+		return createStat, ParsedErr
 	}
 	parser.Lexer.NextToken()
-	createStat.TableName = tableName
+	createStat.TableName = tableName.Value.(string)
 
-	if openBlock := parser.Lexer.Token();
-		!parser.match(openBlock, "LBRACE", "{") {
-		return nil, ParsedErr
+	if openBlock := parser.Lexer.Token(); !parser.match(openBlock, "LBRACE", "{") {
+		return createStat, ParsedErr
 	}
 
-	for ;; {
+	for {
 		col := parser.Lexer.Token()
 		if !parser.matchType(col, "IDENTIFIER") {
-			return nil, ParsedErr
+			return createStat, ParsedErr
 		}
-		createStat.Cols = append(createStat.Cols, col)
+		createStat.Cols = append(createStat.Cols, col.Value.(string))
 
 		t := parser.Lexer.Token()
-		if  (t.Value != "STRING" &&
-				t.Value != "INT"&&
-				t.Value != "DOUBLE") ||
-			!parser.matchType(t,"IDENTIFIER") {
-			return nil, ParsedErr
+		if (t.Value != "STRING" &&
+			t.Value != "INT" &&
+			t.Value != "DOUBLE") ||
+			!parser.matchType(t, "IDENTIFIER") {
+			return createStat, ParsedErr
 		}
 
 		if t.Value == "STRING" {
 			num := parser.Lexer.Token()
-			if num.TypeInfo != "INT" || num <= 0 || num > 1024 {
-				return nil, ParsedErr
+			if num.TypeInfo != "INT" || num.Value.(int) <= 0 || num.Value.(int) > 1024 {
+				return createStat, ParsedErr
 			}
 
-			createStat.Lens = append(createStat.Lens, num)
+			createStat.Lens = append(createStat.Lens, num.Value.(uint16))
 			parser.Lexer.NextToken()
 		} else {
-			if t.Value == "INT"{
+			if t.Value == "INT" {
 				createStat.Lens = append(createStat.Lens, 2)
 			} else {
 				createStat.Lens = append(createStat.Lens, 4)
 			}
 		}
 
-		createStat.Types = append(createStat.Types, t)
+		createStat.Types = append(createStat.Types, t.Value.(string))
 
 		nullable := parser.Lexer.Token()
 		if nullable.Value == "Nullable" {
@@ -337,7 +339,7 @@ func (parser *Parser) ParseCreate() (*Appliable, error) {
 		} else if comma.TypeInfo == "SEMI" && comma.Value == ";" {
 			break
 		}
-		return nil, ParsedErr
+		return createStat, ParsedErr
 
 	}
 
@@ -345,53 +347,53 @@ func (parser *Parser) ParseCreate() (*Appliable, error) {
 	if index.Value == "Index" {
 		parser.Lexer.NextToken()
 
-		for ;; {
+		for {
 			indexCol := parser.Lexer.Token()
 			if indexCol.TypeInfo != "IDENTIFIER" &&
 				indexCol.TypeInfo != "SEMI" {
-				return nil, ParsedErr
+				return createStat, ParsedErr
 			}
 
 			createStat.Indexes = append(createStat.Indexes,
-				indexCol.Value)
+				indexCol.Value.(string))
 		}
 	}
 
 	if !parser.matchSemi(parser.Lexer.Token()) {
-		return nil, ParsedErr
+		return createStat, ParsedErr
 	}
 
-	return &createStat, nil
+	return createStat, nil
 }
 
-func (parser *Parser) ParseInsert() (Appliable, error) {
-	insertStat := &InsertStatement{}
+func (parser *Parser) ParseInsert() (InsertStatement, error) {
+	insertStat := InsertStatement{}
 	if !parser.matchSimple(parser.Lexer.Token(), "INTO") {
-		return nil, ParsedErr
+		return insertStat, ParsedErr
 	}
 	tableName := parser.Lexer.Token()
 	if !parser.matchType(tableName, "IDENTIFIER") {
-		return nil, ParsedErr
+		return insertStat, ParsedErr
 	}
 
-	insertStat.TableName = tableName
+	insertStat.TableName = tableName.Value.(string)
 
 	if !parser.matchSimple(parser.Lexer.Token(), "VALUES") {
-		return nil, ParsedErr
+		return insertStat, ParsedErr
 	}
 
 	if !parser.match(parser.Lexer.Token(), "LPAREN", "(") {
-		return nil, ParsedErr
+		return insertStat, ParsedErr
 	}
 
-	for ;; {
+	for {
 		v := parser.Lexer.Token()
 		if parser.match(v, "RPAREN", ")") {
 			break
 		}
 		if v.TypeInfo != "INT" && v.TypeInfo != "DOUBLE" &&
 			v.TypeInfo != "STRING" && v.TypeInfo != "NULL" {
-			return nil, ParsedErr
+			return insertStat, ParsedErr
 		}
 
 		insertStat.Values = append(insertStat.Values, v)
@@ -400,7 +402,7 @@ func (parser *Parser) ParseInsert() (Appliable, error) {
 	}
 
 	if !parser.matchSemi(parser.Lexer.Token()) {
-		return nil, ParsedErr
+		return insertStat, ParsedErr
 	}
 	return insertStat, nil
 }

@@ -6,9 +6,9 @@ type (
 	SelectStatement struct {
 		Unique Unique
 
-		All All
+		All *All
 
-		Star Star
+		Star *Star
 
 		Fields Fields
 
@@ -32,7 +32,7 @@ func (sel SelectStatement) IsSelect() bool {
 
 func IsSelectStatement(sel SelectStatement) bool {
 	return IsUniqueStatement(sel.Unique) &&
-		IsAllStatement(sel.All) &&
+		IsAllStatement(*sel.All) &&
 		IsFieldsStatement(sel.Fields) &&
 		IsFromStatement(sel.From) &&
 		IsWhereStatement(sel.Where) &&

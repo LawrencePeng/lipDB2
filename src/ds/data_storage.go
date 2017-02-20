@@ -3,11 +3,12 @@ package ds
 import (
 	"../dm"
 	"../im"
-	"errors"
-	"../sql/parser/statements"
 	"../sql/lexer"
-	"math"
+	"../sql/parser/statements"
 	"encoding/binary"
+	"errors"
+	"math"
+	"strconv"
 )
 
 type DS struct {
@@ -15,19 +16,18 @@ type DS struct {
 }
 
 type diPair struct {
-	dm *dm.DM
+	dm  *dm.DM
 	ims []*im.IM
 }
 
-func NewDS() *DS { return &DS{ make(map[string]*diPair) } }
+func NewDS() *DS { return &DS{make(map[string]*diPair)} }
 
 func (ds DS) CreateTable(tableName string,
-						cols []string,
-						types []string,
-						lens  []uint16,
-						nullables []bool,
-						indexes  []string) string {
-
+	cols []string,
+	types []string,
+	lens []uint16,
+	nullables []bool,
+	indexes []string) string {
 
 	indexesToBuild := make([]bool, len(cols))
 
@@ -54,12 +54,12 @@ func (ds DS) CreateTable(tableName string,
 	dP.dm = dataManager
 
 	ims := make([]*im.IM, 0)
-	for _, s := range indexes {
+	for i, s := range indexesToBuild {
 		if s {
-			indexM, err := im.NewIndexManager(tableName, s)
+			indexM, err := im.NewIndexManager(tableName, cols[i])
 			if err != nil {
 				return "Failed to Create Index for " + tableName +
-					"." + s
+					"." + cols[i]
 			}
 			ims = append(ims, indexM)
 		}
@@ -88,11 +88,11 @@ func (ds DS) DropTable(tableName string) string {
 	t.dm = nil
 
 	for i, index := range t.ims {
-		if err := index.Boom(); err !=nil {
+		if err := index.Boom(); err != nil {
 			return "RM Index Failed."
 		}
 
-		t.ims = append(t.ims[:i], t.ims[i + 1]...)
+		t.ims = append(t.ims[:i], t.ims[i+1:]...)
 	}
 	t.ims = nil
 
@@ -131,7 +131,7 @@ func (ds DS) ReadTable(tableName string,
 	}
 
 	if where == nil {
-		byteArrs := ReadAllPosFrom(table)
+		byteArrs := ReadAllPosFrom(table.dm)
 
 		ret := "{ "
 
@@ -141,11 +141,13 @@ func (ds DS) ReadTable(tableName string,
 				for i, c := range md.Cols {
 					if f == c { // Support null
 						if md.Types[i] == "INT" {
-							ret += string(int(arr[md.Offsets[i]: md.Offsets[i] + md.Lens[i]])) + ","
+							bytes := arr[int(md.Offsets[i]):int(md.Offsets[i]+2)]
+							ret += string(int(binary.BigEndian.Uint16(bytes))) + ","
 						} else if md.Types[i] == "DOUBLE" {
-							ret += string(float64(arr[md.Offsets[i]: md.Offsets[i] + md.Lens[i]])) + ","
+							bytes := arr[int(md.Offsets[i]):int(md.Offsets[i]+4)]
+							ret += string(strconv.FormatFloat(float64(binary.BigEndian.Uint64(bytes)), 'g', 1, 64)) + ","
 						} else {
-							ret += string(arr[md.Offsets[i]: md.Offsets[i] + md.Lens[i]]) + ","
+							ret += string(arr[int(md.Offsets[i]):int(md.Offsets[i]+md.Lens[i])]) + ","
 						}
 					}
 				}
@@ -157,7 +159,7 @@ func (ds DS) ReadTable(tableName string,
 
 	} else {
 
-		arrs := table.dm.RetrieveBy(where)
+		arrs := table.dm.RetrieveBy(*where)
 
 		ret := "{ "
 
@@ -167,11 +169,13 @@ func (ds DS) ReadTable(tableName string,
 				for i, c := range md.Cols {
 					if f == c { // Support null
 						if md.Types[i] == "INT" {
-							ret += string(int(arr[md.Offsets[i]: md.Offsets[i] + md.Lens[i]])) + ","
+							bytes := arr[int(md.Offsets[i]):int(md.Offsets[i]+2)]
+							ret += string(int(binary.BigEndian.Uint16(bytes))) + ","
 						} else if md.Types[i] == "DOUBLE" {
-							ret += string(float64(arr[md.Offsets[i]: md.Offsets[i] + md.Lens[i]])) + ","
+							bytes := arr[int(md.Offsets[i]):int(md.Offsets[i]+4)]
+							ret += string(strconv.FormatFloat(float64(binary.BigEndian.Uint64(bytes)), 'g', 1, 64)) + ","
 						} else {
-							ret += string(arr[md.Offsets[i]: md.Offsets[i] + md.Lens[i]]) + ","
+							ret += string(arr[int(md.Offsets[i]):int(md.Offsets[i]+md.Lens[i])]) + ","
 						}
 					}
 				}
@@ -180,7 +184,6 @@ func (ds DS) ReadTable(tableName string,
 		}
 
 		return ret + " }"
-
 
 		//conds := where.Expr.Conditions
 
@@ -277,27 +280,27 @@ func (ds DS) Insert(tableName string, values []interface{}) string {
 
 		} else if tok.TypeInfo == "STRING" {
 			s := tok.Value.(string)
-			if len(s) > md.Lens[i] {
+			if len(s) > int(md.Lens[i]) {
 				return "To long for col" + md.Cols[i]
 			}
 
-			data[md.Offsets[i]:] = []byte(s)
+			copy(data[md.Offsets[i]:], []byte(s))
 		} else if tok.TypeInfo == "INT" {
 			integer := tok.Value.(uint16)
 
-			var bts [2]byte
+			var bts []byte
 			binary.BigEndian.PutUint16(bts, integer)
 
-			data[md.Offsets[i]:] = bts
+			copy(data[md.Offsets[i]:], bts)
 
 		} else {
 			double := tok.Value.(float64)
 			integer := math.Float64bits(double)
 
-			var bts [4]byte
+			var bts []byte
 			binary.BigEndian.PutUint64(bts, integer)
 
-			data[md.Offsets[i]:] = bts
+			copy(data[md.Offsets[i]:],bts)
 		}
 	}
 
@@ -318,9 +321,9 @@ func (ds DS) Insert(tableName string, values []interface{}) string {
 }
 
 func (ds DS) Update(tableName string,
-					col		  string,
-					value	  interface{},
-				    where	  *statements.Where) string {
+	col string,
+	value interface{},
+	where *statements.Where) string {
 	table := ds.tables[tableName]
 
 	if table == nil {
@@ -346,7 +349,7 @@ func loadTableFromDisk(tableName string) (*diPair, error) {
 	indexes := dataManager.Kacher.Metadata.Indexes
 	for i, v := range indexes {
 		if v {
-			b, err:= im.GetIndexManager(tableName,
+			b, err := im.GetIndexManager(tableName,
 				dataManager.Kacher.Metadata.Cols[i])
 			if err != nil {
 				return nil, errors.New("Can't load indexManager.")

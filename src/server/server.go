@@ -1,10 +1,10 @@
-package server
+package main
 
 import (
-	"net"
-	"log"
-	"../sql/planner"
 	"../sql/parser"
+	"../sql/planner"
+	"log"
+	"net"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		var buf [2048]byte
+		var buf []byte
 		n, err := conn.Read(buf)
 		if err != nil {
 			conn.Close()

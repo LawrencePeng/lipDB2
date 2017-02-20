@@ -2,18 +2,15 @@ package dm
 
 import "container/list"
 
-type PageIndex int
-type PageNum PageIndex
-
 type Page interface {
-	Pgno() PageIndex
+	Pgno() uint16
 	Data() []byte
 	Flush()
 	NumOfFreeList() uint16
 }
 
 type Pge struct {
-	index         PageIndex
+	index         uint16
 	data          []byte
 	numOfFreeList uint16
 	freeList      *list.List
@@ -21,7 +18,7 @@ type Pge struct {
 	maxPos        uint16
 }
 
-func (p *Pge) PgNo() PageIndex {
+func (p *Pge) PgNo() uint16 {
 	return p.index
 }
 
@@ -45,7 +42,7 @@ func (p *Pge) UpdateWith(bts []byte, pos uint16) {
 	sizeOfRecord := p.kacher.sizeOfRecord
 	begin := int(p.SizeOfBlockHead() + pos*sizeOfRecord)
 	for i := 0; i < int(sizeOfRecord); i++ {
-		p.data[begin + i] = bts[i]
+		p.data[begin+i] = bts[i]
 	}
 }
 

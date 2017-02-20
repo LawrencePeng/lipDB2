@@ -7,7 +7,7 @@ type CreateStatement struct {
 	Lens      []uint16
 	Nullable  []bool
 
-	Indexes   []string
+	Indexes []string
 
 	Appliable
 }

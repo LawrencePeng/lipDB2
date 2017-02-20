@@ -1,28 +1,25 @@
 package im
 
 import (
-	"github.com/datastream/btree"
 	"errors"
+	"github.com/datastream/btree"
 	"os"
-	"encoding/binary"
 )
 
 const SUFFIX_INDEX = ".index"
 
 type IndexManager interface {
-
 }
 
 type IM struct {
 	tableName string
 	indexName string
-	TR *btree.Btree
+	TR        *btree.Btree
 }
 
 func NewIndexManager(tableName string, index string) (*IM, error) {
 	if _, err :=
-		btree.Unmarshal(tableName + "_" + index + SUFFIX_INDEX);
-		err != nil {
+		btree.Unmarshal(tableName + "_" + index + SUFFIX_INDEX); err != nil {
 		return nil, errors.New("Index_Manager has already existed.")
 	}
 
@@ -37,8 +34,16 @@ func NewIndexManager(tableName string, index string) (*IM, error) {
 	}, nil
 }
 
-func GetIndexManager(tableName string, index string) (*btree.Btree, error) {
-	return btree.Unmarshal(tableName + "_" + index + SUFFIX_INDEX)
+func GetIndexManager(tableName string, index string) (*IM, error) {
+	b, err := btree.Unmarshal(tableName + "_" + index + SUFFIX_INDEX)
+	if err != nil {
+		return nil, errors.New("No such index")
+	}
+	return &IM{
+		tableName,
+		index,
+		b,
+		},nil
 }
 
 func (im IM) Boom() error {

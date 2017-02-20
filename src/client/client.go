@@ -1,10 +1,10 @@
-package client
+package main
 
 import (
+	"bufio"
+	"fmt"
 	"net"
 	"os"
-	"fmt"
-	"bufio"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	for ;; {
+	for {
 		sql, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Println("Fail to read sql.")
@@ -28,7 +28,7 @@ func main() {
 			fmt.Println("Fail to send sql.")
 		}
 
-		var buf[1024 * 10]byte
+		var buf []byte
 		n, err := conn.Read(buf)
 		if err != nil {
 			fmt.Println("Fail to read result.")

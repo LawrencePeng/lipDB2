@@ -2,36 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81ebff3a-f006-4c24-92de-7292d26f0108" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/projectFilesBackup/lipDB2.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/client/client.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/dm/page.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/ds/data_storage.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/server/server.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/condition.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/create.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/delete.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/drop.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/insert.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/logicOp.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/parser/statements/update.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sql/planner/planner.go" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/GOPATH__lipDB2_.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/sql/parser/statements/string.go" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/lawrence.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/lawrence.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lipDB2.iml" afterPath="$PROJECT_DIR$/lipDB2.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/client/client.go" afterPath="$PROJECT_DIR$/src/client/client.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dm/cache.go" afterPath="$PROJECT_DIR$/src/dm/cache.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dm/data_manage.go" afterPath="$PROJECT_DIR$/src/dm/data_manage.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dm/page.go" afterPath="$PROJECT_DIR$/src/dm/page.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ds/data_storage.go" afterPath="$PROJECT_DIR$/src/ds/data_storage.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/im/index_manager.go" afterPath="$PROJECT_DIR$/src/im/index_manager.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.go" afterPath="$PROJECT_DIR$/src/main.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/lexer/lexer.go" afterPath="$PROJECT_DIR$/src/sql/lexer/lexer.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/server.go" afterPath="$PROJECT_DIR$/src/server/server.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/parser.go" afterPath="$PROJECT_DIR$/src/sql/parser/parser.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/appliableStatement.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/appliableStatement.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/expr.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/expr.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/create.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/create.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/select.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/select.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/value.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/value.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/where.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/where.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/parser/statements/update.go" afterPath="$PROJECT_DIR$/src/sql/parser/statements/update.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sql/planner/planner.go" afterPath="$PROJECT_DIR$/src/sql/planner/planner.go" />
     </list>
     <ignored path="lipDB2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -64,32 +46,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="planner.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="planner.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sql/planner/planner.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="8" lean-forward="false" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+            <state relative-caret-position="181">
+              <caret line="56" column="49" lean-forward="false" selection-start-line="56" selection-start-column="49" selection-end-line="56" selection-end-column="49" />
               <folding>
                 <element signature="e#17#64#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data_storage.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/ds/data_storage.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1645">
-              <caret line="357" column="1" lean-forward="false" selection-start-line="357" selection-start-column="1" selection-end-line="357" selection-end-column="1" />
-              <folding>
-                <element signature="e#12#121#0" expanded="true" />
-                <element signature="n#!!block;n#CreateTable#0" expanded="false" />
-                <element signature="n#!!block;n#DropTable#0" expanded="false" />
-                <element signature="n#!!block;n#ReadTable#0" expanded="false" />
-                <element signature="e#1911#2041#0" expanded="false" />
-                <element signature="e#5229#5815#0" expanded="false" />
-                <element signature="n#!!block;n#Update#0" expanded="false" />
-                <element signature="n#!!block;n#loadTableFromDisk#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -98,39 +61,39 @@
       <file leaf-file-name="server.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/server.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="968">
-              <caret line="49" column="22" lean-forward="false" selection-start-line="49" selection-start-column="22" selection-end-line="49" selection-end-column="22" />
+            <state relative-caret-position="-72">
+              <caret line="23" column="17" lean-forward="false" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="data_manage.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dm/data_manage.go">
+      <file leaf-file-name="client.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/client/client.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="478">
-              <caret line="168" column="17" lean-forward="false" selection-start-line="168" selection-start-column="17" selection-end-line="168" selection-end-column="17" />
-              <folding>
-                <element signature="e#12#109#0" expanded="true" />
-                <element signature="e#167#411#0" expanded="false" />
-                <element signature="e#187#353#0" expanded="false" />
-                <element signature="e#359#409#0" expanded="false" />
-                <element signature="n#!!block;n#Create#0" expanded="false" />
-                <element signature="n#!!block;n#Open#0" expanded="false" />
-                <element signature="n#!!block;n#Boom#0" expanded="false" />
-                <element signature="n#!!block;n#Insert#0" expanded="false" />
-                <element signature="n#!!block;n#Update#0" expanded="false" />
-                <element signature="n#!!block;n#Delete#0" expanded="false" />
-                <element signature="n#!!block;n#DeleteBy#0" expanded="false" />
-                <element signature="n#!!block;n#DeleteAll#0" expanded="false" />
-                <element signature="n#!!block;n#RetrieveAll#0" expanded="false" />
-                <element signature="n#!!block;n#valid#0" expanded="false" />
-                <element signature="e#6438#8827#0" expanded="false" />
-                <element signature="n#!!block;n#IsValue#0" expanded="false" />
-                <element signature="n#!!block;n#Retrieve#0" expanded="false" />
-                <element signature="n#!!block;n#createFile#0" expanded="false" />
-                <element signature="n#!!block;n#openFile#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="12" lean-forward="false" selection-start-line="0" selection-start-column="12" selection-end-line="0" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="select.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/select.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="181">
+              <caret line="34" column="20" lean-forward="true" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="all.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/all.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="14" column="5" lean-forward="false" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -138,23 +101,44 @@
       <file leaf-file-name="parser.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sql/parser/parser.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="148" column="28" lean-forward="true" selection-start-line="148" selection-start-column="28" selection-end-line="148" selection-end-column="28" />
+            <state relative-caret-position="302">
+              <caret line="102" column="9" lean-forward="true" selection-start-line="102" selection-start-column="9" selection-end-line="102" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data_storage.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/ds/data_storage.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="148">
+              <caret line="322" column="13" lean-forward="false" selection-start-line="322" selection-start-column="13" selection-end-line="322" selection-end-column="13" />
               <folding>
-                <element signature="n#!!block;n#ParseDrop#0" expanded="false" />
-                <element signature="n#!!block;n#ParseDelete#0" expanded="false" />
-                <element signature="n#!!block;n#ParseFields#0" expanded="false" />
-                <element signature="n#!!block;n#ParseStar#0" expanded="false" />
-                <element signature="n#!!block;n#ParseFrom#0" expanded="false" />
-                <element signature="n#!!block;n#ParseCreate#0" expanded="false" />
-                <element signature="n#!!block;n#ParseExpr#0" expanded="false" />
-                <element signature="n#!!block;n#ParseCondition#0" expanded="false" />
-                <element signature="n#!!block;n#ParseLogicOperation#0" expanded="false" />
-                <element signature="n#!!block;n#ParseValue#0" expanded="false" />
-                <element signature="n#!!block;n#match#0" expanded="false" />
-                <element signature="n#!!block;n#matchValue#0" expanded="false" />
-                <element signature="n#!!block;n#matchSimple#0" expanded="false" />
-                <element signature="n#!!block;n#matchSemi#0" expanded="false" />
+                <element signature="e#12#132#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data_manage.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/dm/data_manage.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="148">
+              <caret line="263" column="13" lean-forward="false" selection-start-line="263" selection-start-column="13" selection-end-line="263" selection-end-column="13" />
+              <folding>
+                <element signature="e#12#109#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index_manager.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/im/index_manager.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="137">
+              <caret line="41" column="12" lean-forward="false" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
+              <folding>
+                <element signature="e#12#69#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -183,7 +167,6 @@
       <find>ParseCrea</find>
       <find>Parseline</find>
       <find>Create</find>
-      <find>Update</find>
       <find>Insert</find>
       <find>MetaData</find>
       <find>Nullable</find>
@@ -198,6 +181,8 @@
       <find>Retri</find>
       <find>Delete</find>
       <find>ParseUpdat</find>
+      <find>nil</find>
+      <find>Update</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -239,22 +224,22 @@
         <option value="$PROJECT_DIR$/src/sql/parser/statements/InsertStatement.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/DeleteStatement.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/updateStatement.go" />
-        <option value="$PROJECT_DIR$/src/sql/parser/statements/select.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/insert.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/delete.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/drop.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/update.go" />
         <option value="$PROJECT_DIR$/src/main.go" />
-        <option value="$PROJECT_DIR$/src/client/client.go" />
-        <option value="$PROJECT_DIR$/src/server/server.go" />
         <option value="$PROJECT_DIR$/src/sql/parser/statements/create.go" />
         <option value="$PROJECT_DIR$/src/dm/page.go" />
-        <option value="$PROJECT_DIR$/src/sql/parser/parser.go" />
         <option value="$PROJECT_DIR$/src/dm/cache.go" />
-        <option value="$PROJECT_DIR$/src/im/index_manager.go" />
         <option value="$PROJECT_DIR$/src/dm/data_manage.go" />
         <option value="$PROJECT_DIR$/src/ds/data_storage.go" />
+        <option value="$PROJECT_DIR$/src/im/index_manager.go" />
+        <option value="$PROJECT_DIR$/src/sql/parser/parser.go" />
+        <option value="$PROJECT_DIR$/src/sql/parser/statements/select.go" />
         <option value="$PROJECT_DIR$/src/sql/planner/planner.go" />
+        <option value="$PROJECT_DIR$/src/server/server.go" />
+        <option value="$PROJECT_DIR$/src/client/client.go" />
       </list>
     </option>
   </component>
@@ -290,16 +275,6 @@
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lipDB2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-          </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="lipDB2" />
@@ -385,32 +360,6 @@
               <option name="myItemId" value="sql" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="parser" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="statements" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lipDB2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lipDB2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -427,6 +376,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lipDB2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lipDB2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ds" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -474,7 +441,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Application.Unnamed">
+  <component name="RunManager" selected="Go Application.Client">
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="INTERPRETER_PATH" value="/bin/bash" />
@@ -531,15 +498,23 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="Unnamed" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <configuration default="false" name="Server" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="lipDB2" />
       <working_directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/src/main.go" />
+      <filePath value="$PROJECT_DIR$/src/server/server.go" />
       <kind value="FILE" />
       <method />
     </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="Go Application.Unnamed" />
+    <configuration default="false" name="Client" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="lipDB2" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/src/client/client.go" />
+      <kind value="FILE" />
+      <method />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Go Application.Server" />
+      <item index="1" class="java.lang.String" itemvalue="Go Application.Client" />
     </list>
   </component>
   <component name="SbtLocalSettings">
@@ -604,18 +579,18 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="796" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31987077" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31987077" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32751092" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24959612" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39752406" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3963068" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -688,7 +663,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="34" />
+      <option name="time" value="35" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -697,14 +672,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../workspace/Go/src/github.com/google/btree/btree.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="786">
-          <caret line="136" column="0" lean-forward="true" selection-start-line="136" selection-start-column="0" selection-end-line="136" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/im/btree.go" />
     <entry file="file://$PROJECT_DIR$/../../../workspace/Go/src/github.com/Workiva/go-datastructures/list/persistent.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-616">
@@ -769,13 +736,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="116" column="4" lean-forward="false" selection-start-line="116" selection-start-column="4" selection-end-line="116" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/appliableStatement.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -783,13 +744,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
           <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/drop.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="5" lean-forward="false" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -804,6 +758,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
           <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -847,6 +802,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="446" column="17" lean-forward="false" selection-start-line="446" selection-start-column="17" selection-end-line="446" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -857,32 +813,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/client.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-83">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/lexer/lexer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/Cellar/go/1.7.5/libexec/src/container/list/list.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="485">
           <caret line="61" column="5" lean-forward="false" selection-start-line="61" selection-start-column="5" selection-end-line="61" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/Cellar/go/1.7.5/libexec/src/builtin/builtin.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="181" column="5" lean-forward="false" selection-start-line="181" selection-start-column="5" selection-end-line="181" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -921,13 +855,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/select.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="19" lean-forward="false" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/value.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
@@ -949,30 +876,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dm/page.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="82">
-          <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/im/index_manager.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="7" column="1" lean-forward="false" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dm/cache.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="183" column="37" lean-forward="false" selection-start-line="183" selection-start-column="37" selection-end-line="183" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/insert.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
@@ -981,97 +884,151 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/parser/parser.go">
+    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/appliableStatement.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="148" column="28" lean-forward="true" selection-start-line="148" selection-start-column="28" selection-end-line="148" selection-end-column="28" />
+        <state relative-caret-position="66">
+          <caret line="3" column="4" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/drop.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="13" lean-forward="true" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sql/lexer/lexer.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dm/page.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="11" column="5" lean-forward="false" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
           <folding>
-            <element signature="n#!!block;n#ParseDrop#0" expanded="false" />
-            <element signature="n#!!block;n#ParseDelete#0" expanded="false" />
-            <element signature="n#!!block;n#ParseFields#0" expanded="false" />
-            <element signature="n#!!block;n#ParseStar#0" expanded="false" />
-            <element signature="n#!!block;n#ParseFrom#0" expanded="false" />
-            <element signature="n#!!block;n#ParseCreate#0" expanded="false" />
-            <element signature="n#!!block;n#ParseExpr#0" expanded="false" />
-            <element signature="n#!!block;n#ParseCondition#0" expanded="false" />
-            <element signature="n#!!block;n#ParseLogicOperation#0" expanded="false" />
-            <element signature="n#!!block;n#ParseValue#0" expanded="false" />
-            <element signature="n#!!block;n#match#0" expanded="false" />
-            <element signature="n#!!block;n#matchValue#0" expanded="false" />
-            <element signature="n#!!block;n#matchSimple#0" expanded="false" />
-            <element signature="n#!!block;n#matchSemi#0" expanded="false" />
+            <element signature="e#12#35#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dm/cache.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8514">
+          <caret line="387" column="24" lean-forward="true" selection-start-line="387" selection-start-column="24" selection-end-line="387" selection-end-column="24" />
+          <folding>
+            <element signature="e#12#101#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/go/1.7.5/libexec/src/builtin/builtin.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="145" column="5" lean-forward="false" selection-start-line="145" selection-start-column="5" selection-end-line="145" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/go/1.7.5/libexec/src/strconv/ftoa.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="43" column="33" lean-forward="true" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dm/data_manage.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="478">
-          <caret line="168" column="17" lean-forward="false" selection-start-line="168" selection-start-column="17" selection-end-line="168" selection-end-column="17" />
+        <state relative-caret-position="148">
+          <caret line="263" column="13" lean-forward="false" selection-start-line="263" selection-start-column="13" selection-end-line="263" selection-end-column="13" />
           <folding>
             <element signature="e#12#109#0" expanded="true" />
-            <element signature="e#167#411#0" expanded="false" />
-            <element signature="e#187#353#0" expanded="false" />
-            <element signature="e#359#409#0" expanded="false" />
-            <element signature="n#!!block;n#Create#0" expanded="false" />
-            <element signature="n#!!block;n#Open#0" expanded="false" />
-            <element signature="n#!!block;n#Boom#0" expanded="false" />
-            <element signature="n#!!block;n#Insert#0" expanded="false" />
-            <element signature="n#!!block;n#Update#0" expanded="false" />
-            <element signature="n#!!block;n#Delete#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteBy#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteAll#0" expanded="false" />
-            <element signature="n#!!block;n#RetrieveAll#0" expanded="false" />
-            <element signature="n#!!block;n#valid#0" expanded="false" />
-            <element signature="e#6438#8827#0" expanded="false" />
-            <element signature="n#!!block;n#IsValue#0" expanded="false" />
-            <element signature="n#!!block;n#Retrieve#0" expanded="false" />
-            <element signature="n#!!block;n#createFile#0" expanded="false" />
-            <element signature="n#!!block;n#openFile#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/server.go">
+    <entry file="file:///usr/local/Cellar/go/1.7.5/libexec/src/strconv/atof.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="968">
-          <caret line="49" column="22" lean-forward="false" selection-start-line="49" selection-start-column="22" selection-end-line="49" selection-end-column="22" />
+        <state relative-caret-position="159">
+          <caret line="532" column="5" lean-forward="false" selection-start-line="532" selection-start-column="5" selection-end-line="532" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/im/index_manager.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="41" column="12" lean-forward="false" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
+          <folding>
+            <element signature="e#12#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/select.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="34" column="20" lean-forward="true" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/all.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="14" column="5" lean-forward="false" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sql/parser/parser.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="302">
+          <caret line="102" column="9" lean-forward="true" selection-start-line="102" selection-start-column="9" selection-end-line="102" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ds/data_storage.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1645">
-          <caret line="357" column="1" lean-forward="false" selection-start-line="357" selection-start-column="1" selection-end-line="357" selection-end-column="1" />
+        <state relative-caret-position="148">
+          <caret line="322" column="13" lean-forward="false" selection-start-line="322" selection-start-column="13" selection-end-line="322" selection-end-column="13" />
           <folding>
-            <element signature="e#12#121#0" expanded="true" />
-            <element signature="n#!!block;n#CreateTable#0" expanded="false" />
-            <element signature="n#!!block;n#DropTable#0" expanded="false" />
-            <element signature="n#!!block;n#ReadTable#0" expanded="false" />
-            <element signature="e#1911#2041#0" expanded="false" />
-            <element signature="e#5229#5815#0" expanded="false" />
-            <element signature="n#!!block;n#Update#0" expanded="false" />
-            <element signature="n#!!block;n#loadTableFromDisk#0" expanded="false" />
+            <element signature="e#12#132#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/parser/statements/all.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sql/planner/planner.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="8" lean-forward="false" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        <state relative-caret-position="181">
+          <caret line="56" column="49" lean-forward="false" selection-start-line="56" selection-start-column="49" selection-end-line="56" selection-end-column="49" />
           <folding>
             <element signature="e#17#64#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/server.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-72">
+          <caret line="23" column="17" lean-forward="false" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client/client.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="12" lean-forward="false" selection-start-line="0" selection-start-column="12" selection-end-line="0" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
